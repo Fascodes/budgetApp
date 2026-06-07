@@ -7,10 +7,10 @@ INSERT INTO categories (name) VALUES
   ('Utilities'),
   ('Shopping');
 
-INSERT INTO accounts (id, name, balance, created_at) VALUES
-  (1, 'Jan Kowalski',   5000.00, '2024-01-01 10:00:00'),
-  (2, 'Anna Nowak',    12350.75, '2024-01-15 09:30:00'),
-  (3, 'Piotr Wiśniewski', 850.50, '2024-02-01 14:00:00');
+INSERT INTO accounts (name, balance, created_at) VALUES
+  ('Jan Kowalski',   5000.00, '2024-01-01 10:00:00'),
+  ('Anna Nowak',    12350.75, '2024-01-15 09:30:00'),
+  ('Piotr Wiśniewski', 850.50, '2024-02-01 14:00:00');
 
 INSERT INTO transactions (account_id, category_id, type, amount, description, date) VALUES
   (1, 5, 'INCOME',  6500.00, 'Monthly salary',        '2024-03-01 08:00:00'),
