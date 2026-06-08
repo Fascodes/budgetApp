@@ -1,6 +1,8 @@
 package dev.fascodes.budgetApp.account.exception;
 
-public class AccountNotFoundException extends RuntimeException {
+import dev.fascodes.budgetApp.common.ResourceNotFoundException;
+
+public class AccountNotFoundException extends ResourceNotFoundException {
     public AccountNotFoundException(Long id) {
         super("Account not found with id: " + id);
     }
