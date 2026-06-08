@@ -1,8 +1,6 @@
 package dev.fascodes.budgetApp.account.controller;
 
-import dev.fascodes.budgetApp.account.dto.AccountDetailResponse;
-import dev.fascodes.budgetApp.account.dto.AccountRequest;
-import dev.fascodes.budgetApp.account.dto.AccountSummaryResponse;
+import dev.fascodes.budgetApp.account.dto.*;
 import dev.fascodes.budgetApp.account.service.AccountService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -33,5 +31,16 @@ public class AccountController {
     @PostMapping
     public ResponseEntity<AccountDetailResponse> addAccount(@Valid @RequestBody AccountRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(accountService.addAccount(request));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
+        accountService.deleteAccount(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/summary")
+    public ResponseEntity<SummaryResponse> getAccountSummary(@PathVariable Long id) {
+        return ResponseEntity.ok(accountService.getAccountSummary(id));
     }
 }

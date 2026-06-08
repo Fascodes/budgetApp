@@ -54,7 +54,7 @@ public class TransactionService {
 
     @Transactional
     public TransactionResponse addTransaction(TransactionRequest request) {
-        Account account = accountRepository.findById(request.getAccountId())
+        Account account = accountRepository.findByIdWithLock(request.getAccountId())
                 .orElseThrow(() -> new AccountNotFoundException(request.getAccountId()));
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new CategoryNotFoundException(request.getCategoryId()));
@@ -73,7 +73,9 @@ public class TransactionService {
         Transaction transaction = transactionRepository.findById(id)
                 .orElseThrow(() -> new TransactionNotFoundException(id));
 
-        Account account = transaction.getAccount();
+        Long accountId = transaction.getAccount().getId();
+        Account account = accountRepository.findByIdWithLock(accountId)
+                .orElseThrow(() -> new AccountNotFoundException(accountId));
         applyBalanceChange(account, transaction.getType(), transaction.getAmount(), true);
         accountRepository.save(account);
 
