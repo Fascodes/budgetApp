@@ -1,5 +1,6 @@
 package dev.fascodes.budgetApp.common;
 
+import dev.fascodes.budgetApp.account.exception.AccountHasTransactionsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -12,6 +13,12 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(AccountHasTransactionsException.class)
+    public ResponseEntity<Map<String, String>> handleAccountHasTransactions(AccountHasTransactionsException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Map.of("error", ex.getMessage()));
+    }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleNotFound(ResourceNotFoundException ex) {
