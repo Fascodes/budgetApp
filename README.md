@@ -41,6 +41,8 @@ docker compose up -d
 
 Aplikacja startuje na `http://localhost:8080`. Flyway automatycznie tworzy schemat i ładuje dane przykładowe przy pierwszym uruchomieniu.
 
+Dokumentacja API (Swagger UI) dostępna pod: `http://localhost:8080/swagger-ui.html`
+
 ---
 
 ## Endpointy
@@ -54,6 +56,7 @@ Aplikacja startuje na `http://localhost:8080`. Flyway automatycznie tworzy schem
 | `POST` | `/api/account` | Utwórz nowe konto | 201, 400 |
 | `DELETE` | `/api/account/{id}` | Usuń konto (tylko bez transakcji) | 204, 404, 409 |
 | `GET` | `/api/account/{id}/summary` | Podsumowanie przychodów i wydatków | 200, 404 |
+| `GET` | `/api/account/{id}/transactions/export` | Eksport transakcji konta do pliku CSV | 200, 404 |
 
 **POST `/api/account` — przykładowe body:**
 ```json
@@ -152,7 +155,7 @@ src/main/java/dev/fascodes/budgetApp/
 │   ├── model/           # Transaction, Category, TransactionType
 │   ├── repository/      # TransactionRepository, CategoryRepository, TransactionSpecification
 │   └── service/         # TransactionService
-└── common/              # GlobalExceptionHandler, ResourceNotFoundException
+└── common/              # GlobalExceptionHandler, ResourceNotFoundException, OpenApiConfig
 
 src/main/resources/
 ├── application.properties
