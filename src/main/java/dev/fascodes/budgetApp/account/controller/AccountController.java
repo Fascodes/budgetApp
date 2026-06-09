@@ -7,7 +7,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,5 +72,19 @@ public class AccountController {
     @GetMapping("/{id}/summary")
     public ResponseEntity<SummaryResponse> getAccountSummary(@PathVariable Long id) {
         return ResponseEntity.ok(accountService.getAccountSummary(id));
+    }
+
+    @Operation(summary = "Export transactions to CSV", description = "Downloads all transactions for the given account as a CSV file.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "CSV file returned"),
+            @ApiResponse(responseCode = "404", description = "Account not found")
+    })
+    @GetMapping("/{id}/transactions/export")
+    public ResponseEntity<byte[]> exportTransactions(@PathVariable Long id) {
+        byte[] csv = accountService.exportTransactionsToCsv(id);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"transactions_" + id + ".csv\"")
+                .contentType(MediaType.parseMediaType("text/csv;charset=UTF-8"))
+                .body(csv);
     }
 }

@@ -6,11 +6,15 @@ import dev.fascodes.budgetApp.account.exception.AccountNotFoundException;
 import dev.fascodes.budgetApp.account.mapper.AccountMapper;
 import dev.fascodes.budgetApp.account.model.Account;
 import dev.fascodes.budgetApp.account.repository.AccountRepository;
+import dev.fascodes.budgetApp.transaction.model.Transaction;
 import dev.fascodes.budgetApp.transaction.model.TransactionType;
 import dev.fascodes.budgetApp.transaction.repository.TransactionRepository;
+import dev.fascodes.budgetApp.transaction.repository.TransactionSpecification;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Service
@@ -64,5 +68,32 @@ public class AccountService {
                 .map(p -> new CategoryExpense(p.getCategoryName(), p.getTotal()))
                 .toList();
         return new SummaryResponse(totalIncome, totalExpenses, expensesByCategory);
+    }
+
+    public byte[] exportTransactionsToCsv(Long accountId) {
+        if (!accountRepository.existsById(accountId)) {
+            throw new AccountNotFoundException(accountId);
+        }
+        Specification<Transaction> spec = Specification.where(TransactionSpecification.hasAccount(accountId));
+        List<Transaction> transactions = transactionRepository.findAll(spec);
+
+        StringBuilder csv = new StringBuilder("id,date,type,category,amount,description\n");
+        for (Transaction t : transactions) {
+            csv.append(t.getId()).append(',')
+               .append(t.getDate()).append(',')
+               .append(t.getType()).append(',')
+               .append(escapeCsv(t.getCategory().getName())).append(',')
+               .append(t.getAmount()).append(',')
+               .append(escapeCsv(t.getDescription() != null ? t.getDescription() : ""))
+               .append('\n');
+        }
+        return csv.toString().getBytes(StandardCharsets.UTF_8);
+    }
+
+    private String escapeCsv(String value) {
+        if (value.contains(",") || value.contains("\"") || value.contains("\n")) {
+            return "\"" + value.replace("\"", "\"\"") + "\"";
+        }
+        return value;
     }
 }
