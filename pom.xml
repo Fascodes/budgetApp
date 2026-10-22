@@ -73,16 +73,20 @@
 			<version>2.8.9</version>
 		</dependency>
 
+
 		<dependency>
-			<groupId>org.testcontainers</groupId>
-			<artifactId>junit-jupiter</artifactId>
-			<version>${testcontainers.version}</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-testcontainers</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.testcontainers</groupId>
-			<artifactId>postgresql</artifactId>
-			<version>${testcontainers.version}</version>
+			<artifactId>postgresql</artifactId>   <!-- w TC 1.x: postgresql -->
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>junit-jupiter</artifactId> <!-- w TC 1.x: junit-jupiter -->
 			<scope>test</scope>
 		</dependency>
 		<dependency>
