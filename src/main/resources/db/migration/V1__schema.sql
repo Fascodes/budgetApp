@@ -5,7 +5,7 @@ CREATE TYPE "transaction_type" AS ENUM (
 
 CREATE TABLE "categories" (
   "id" bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  "name" varchar
+  "name" varchar NOT NULL
 );
 
 CREATE TABLE "transactions" (
@@ -15,12 +15,12 @@ CREATE TABLE "transactions" (
   "type" transaction_type,
   "amount" numeric(14,2) NOT NULL DEFAULT 0,
   "description" varchar,
-  "date" timestamp
+  "date" timestamp NOT NULL
 );
 
 CREATE TABLE "accounts" (
   "id" bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  "name" varchar,
+  "name" varchar NOT NULL,
   "balance" numeric(14,2) NOT NULL DEFAULT 0,
   "created_at" timestamp DEFAULT now()
 );
@@ -28,3 +28,7 @@ CREATE TABLE "accounts" (
 ALTER TABLE "transactions" ADD FOREIGN KEY ("account_id") REFERENCES "accounts" ("id");
 
 ALTER TABLE "transactions" ADD FOREIGN KEY ("category_id") REFERENCES "categories" ("id");
+
+CREATE INDEX "idx_transactions_account_id" ON "transactions" ("account_id");
+
+CREATE INDEX "idx_transactions_category_id" ON "transactions" ("category_id");

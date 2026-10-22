@@ -12,6 +12,7 @@ import dev.fascodes.budgetApp.transaction.repository.TransactionRepository;
 import dev.fascodes.budgetApp.transaction.repository.TransactionSpecification;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
@@ -47,6 +48,7 @@ public class AccountService {
         return accountMapper.toAccountDetailResponse(saved);
     }
 
+    @Transactional
     public void deleteAccount(Long id) {
         if (!accountRepository.existsById(id)) {
             throw new AccountNotFoundException(id);
